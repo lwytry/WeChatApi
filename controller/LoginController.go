@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"time"
 	"wechat/model"
+	"wechat/redis"
 )
 
 func GetUserlist(c *gin.Context) {
@@ -17,6 +18,7 @@ func GetUserlist(c *gin.Context) {
 		"code": http.StatusOK,
 		"data": list,
 	})
+
 }
 
 func Register(c *gin.Context) {
@@ -27,10 +29,17 @@ func Register(c *gin.Context) {
 	ret := model.AddUser(phoneNum, int(time.Now().Unix()))
 	if (ret) {
 		c.JSON(http.StatusOK, gin.H{
-			"errMessage": "",
+			"message": "",
 			"errCode": 0,
 		})
 	}
+}
+
+func redisTest() {
+	_, err := redis.NewCache.SetString("aaa", 33)
+	fmt.Println(err)
+	val, _ := redis.NewCache.GetInt("aaa")
+	fmt.Println(val)
 }
 
 

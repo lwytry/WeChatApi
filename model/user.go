@@ -21,7 +21,7 @@ func AddUser(phone string, createdBy int) bool{
 	user.Name = phone
 	user.Identifier = "wx_2kd8Dflco"
 	user.Phone = phone
-	DB.Table("wechat_user").Create(&user)
+	//DB.Table("wechat_user").Create(&user)
 	return true
 }
 
