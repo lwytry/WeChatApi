@@ -43,14 +43,10 @@ func GetUserTotal(maps interface {}) (count int){
 	return
 }
 
-func ExistUserByPhone(phone string) bool {
-	var user User
-	DB.Select("id").Where("phone = ?", phone).First(&user)
-	if user.ID > 0 {
-		return true
-	}
+func GetUserByPhone(phone string) (user User) {
+	DB.Table("wechat_user").Where("phone = ?", phone).First(&user)
 
-	return false
+	return
 }
 
 

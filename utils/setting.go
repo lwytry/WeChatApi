@@ -15,9 +15,6 @@ var (
 	HTTPPort int
 	ReadTimeout time.Duration
 	WriteTimeout time.Duration
-
-	PageSize int
-	JwtSecret string
 )
 
 func init() {

@@ -20,6 +20,9 @@ func InitRouter() *gin.Engine {
 		apiv1.POST("/register", controller.Register)
 		// 查询列表
 		apiv1.GET("/getuserlist", controller.GetUserlist)
+		apiv1.POST("/login", controller.Login)
+		apiv1.GET("jwtParse", controller.ParseToken)
+		apiv1.GET("sendCaptcha", controller.SendCaptcha)
 	}
 
 	return r

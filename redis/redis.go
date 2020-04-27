@@ -1,7 +1,6 @@
 package redis
 
 import (
-	"fmt"
 	"github.com/gomodule/redigo/redis"
 	"log"
 	"time"
