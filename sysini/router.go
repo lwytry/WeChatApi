@@ -22,7 +22,8 @@ func InitRouter() *gin.Engine {
 		apiv1.GET("/getuserlist", controller.GetUserlist)
 		apiv1.POST("/login", controller.Login)
 		apiv1.GET("jwtParse", controller.ParseToken)
-		apiv1.GET("sendCaptcha", controller.SendCaptcha)
+		apiv1.GET("/sendCaptcha", controller.SendCaptcha)
+		apiv1.POST("/chat", controller.Chat)
 	}
 
 	return r

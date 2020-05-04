@@ -3,14 +3,16 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"wechat/sysini"
 	_ "wechat/model"
+	"wechat/servers/websocket"
+	"wechat/sysini"
 	"wechat/utils"
 )
 
 func main() {
-	router := sysini.InitRouter()
 
+	go websocket.StartWebSocket()
+	router := sysini.InitRouter()
 	s := &http.Server{
 		Addr:           fmt.Sprintf(":%d", utils.HTTPPort),
 		Handler:        router,
@@ -18,6 +20,5 @@ func main() {
 		WriteTimeout:   utils.WriteTimeout,
 		MaxHeaderBytes: 1 << 20,
 	}
-
 	s.ListenAndServe()
 }

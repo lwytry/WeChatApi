@@ -23,6 +23,7 @@ func GetUserlist(c *gin.Context) {
 		"data": list,
 	})
 
+
 }
 
 func Register(c *gin.Context) {
