@@ -1,30 +1,58 @@
 package controller
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"wechat/servers/websocket"
 )
 
+type MessageDstType uint8
+type MessageType uint8
+
+const (
+	MessageDstTypeUser MessageDstType = iota
+	MessageDstTypeGroup
+)
+
+const (
+	MessageTypeUnknown MessageType = iota
+	MessageTypeText          // 文字
+	MessageTypeImage         // 图片
+	MessageTypeExpression    // 表情
+	MessageTypeVoice         // 语音
+	MessageTypeVideo         // 视频
+	MessageTypeURL           // 链接
+	MessageTypePosition      // 位置
+	MessageTypeBusinessCard  // 名片
+	MessageTypeSystem        // 系统
+	MessageTypeOther
+)
+
 type Message struct {
-	Id      int64  `json:"id,omitempty" form:"id"`           //消息ID
-	Userid  int64  `json:"userid,omitempty" form:"userid"`   //谁发的
-	Cmd     int    `json:"cmd,omitempty" form:"cmd"`         //群聊还是私聊
-	Dstid   int64  `json:"dstid,omitempty" form:"dstid"`     //对端用户ID/群ID
-	Media   int    `json:"media,omitempty" form:"media"`     //消息按照什么样式展示
-	Content string `json:"content,omitempty" form:"content"` //消息的内容
-	Pic     string `json:"pic,omitempty" form:"pic"`         //预览图片
-	Url     string `json:"url,omitempty" form:"url"`         //服务的URL
-	Memo    string `json:"memo,omitempty" form:"memo"`       //简单描述
-	Amount  int    `json:"amount,omitempty" form:"amount"`   //其他和数字相关的
+	Id      	string  			`json:"id" form:"id"`           //消息ID
+	UserId  	string  			`json:"userid" form:"userId"`   //谁发的
+	DstType 	uint8  				`json:"DstType" form:"DstType"` //群聊还是私聊
+	DstID  		string  			`json:"dstid" form:"dstId"`     //对端用户ID/群ID
+	MsgType 	uint8  			`json:"msgType" form:"msgType"` //消息类型
+	Content		string 			`json:"content"` 				// 消息内容
+	Date 		int64 			`json:"date,omitempty" form:"dstId"`     	//时间
 }
 
-//func Chat(c *gin.Context) {
-//	token := c.Query("token");
-//
-//	// 解码
-//
-//}
+
+func SendMessage(c *gin.Context) {
+	jsonData := Message{}
+	err := c.BindJSON(&jsonData)
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		fmt.Println(jsonData)
+	}
+}
+
+func PullMessage(c *gin.Context) {
+
+}
 
 func Chat(c *gin.Context) {
 	message := "你好客户端"
