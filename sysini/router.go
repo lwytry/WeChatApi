@@ -18,12 +18,18 @@ func InitRouter() *gin.Engine {
 	{
 		// 注册
 		apiv1.POST("/register", controller.Register)
-		// 查询列表
-		apiv1.GET("/getuserlist", controller.GetUserlist)
+		// 登录
 		apiv1.POST("/login", controller.Login)
-		apiv1.GET("jwtParse", controller.ParseToken)
+		// 发送验证码
 		apiv1.GET("/sendCaptcha", controller.SendCaptcha)
-		apiv1.POST("/chat", controller.Chat)
+	}
+
+	chat := apiv1.Group("/chat")
+	{
+		// 发送消息
+		chat.POST("/message", controller.SendMessage)
+		// 拉取消息
+		chat.GET("/message", controller.PullMessage)
 	}
 
 	return r

@@ -41,7 +41,7 @@ func wsPage(w http.ResponseWriter, req *http.Request) {
 	}
 
 	fmt.Println("webSocket 建立连接:", conn.RemoteAddr().String())
-
+	// 连接处可以做认证
 	userId := req.URL.Query().Get("userId");
 
 	currentTime := uint64(time.Now().Unix())
@@ -54,41 +54,3 @@ func wsPage(w http.ResponseWriter, req *http.Request) {
 	ClientManagerins.Register <- client
 }
 
-// 管道处理程序
-func (manager *ClientManager) start() {
-	for {
-		select {
-		case conn := <-manager.Register:
-			// 建立连接事件
-			manager.EventRegister(conn)
-
-		//case login := <-manager.Login:
-		//	// 用户登录
-		//	manager.EventLogin(login)
-		//
-		//case conn := <-manager.Unregister:
-		//	// 断开连接事件
-		//	manager.EventUnregister(conn)
-		//
-		//case message := <-manager.Broadcast:
-		//	// 广播事件
-		//	clients := manager.GetClients()
-		//	for conn := range clients {
-		//		select {
-		//		case conn.Send <- message:
-		//		default:
-		//			close(conn.Send)
-		//		}
-		//	}
-		}
-	}
-}
-
-// 用户建立连接事件
-func (manager *ClientManager) EventRegister(client *Client) {
-	manager.AddClients(client)
-
-	fmt.Println("EventRegister 用户建立连接", client.Addr)
-
-	// client.Send <- []byte("连接成功")
-}

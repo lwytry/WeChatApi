@@ -7,10 +7,52 @@ import (
 
 // 连接管理
 type ClientManager struct {
-	Clients     map[string]*Client // 登录的用户 // appId+uuid
+	Clients     map[string]*Client // 登录的用户 // userId
 	ClientsLock sync.RWMutex       // 读写锁
 	Register    chan *Client       // 连接连接处理
 	Unregister  chan *Client       // 断开连接处理程序
+}
+
+// 管道处理程序
+func (manager *ClientManager) start() {
+	for {
+		select {
+		case conn := <-manager.Register:
+			// 建立连接事件
+			manager.EventRegister(conn)
+
+		case conn := <-manager.Unregister:
+			// 断开连接事件
+			manager.EventUnregister(conn)
+		}
+	}
+}
+
+// 用户建立连接事件
+func (manager *ClientManager) EventRegister(client *Client) {
+	manager.AddClients(client)
+
+	fmt.Println("EventRegister 用户建立连接", client.Addr)
+
+	// client.Send <- []byte("连接成功")
+}
+
+// 用户断开连接
+func (manager *ClientManager) EventUnregister(client *Client) {
+	// 清除客户端
+	manager.DelClients(client)
+
+	fmt.Println("EventUnregister 用户断开连接", client.Addr, client.UserId)
+}
+
+// 删除客户端
+func (manager *ClientManager) DelClients(client *Client) {
+	manager.ClientsLock.Lock()
+	defer manager.ClientsLock.Unlock()
+	delKey := client.UserId
+	if _, ok := manager.Clients[delKey]; ok {
+		delete(manager.Clients, delKey)
+	}
 }
 
 func NewClientManager() (clientManager *ClientManager) {

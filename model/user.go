@@ -6,22 +6,27 @@ import (
 )
 
 type User struct {
-	gorm.Model
+	ID        uint `gorm:"primary_key" json:"id"`
 	Name string `gorm:"column:username" json:"username"`
 	Identifier string `gorm:"column:identifier" json:"identifier"`
 	Phone string `gorm:"column:phone" json:"phone"`
+	Password string `gorm:"column:password" json:"_"`
+	AvatarPath string `gorm:"column:avatarPath" json:"avatarPath"`
+	CreatedAt time.Time `json:"_"`
+	UpdatedAt time.Time `json:"_"`
+	DeletedAt *time.Time `sql:"index" json:"_"`
 }
 
 func (User) TableName() string {
 	return "user"
 }
 
-func AddUser(phone string, createdBy int) bool{
+func AddUser(phone string, identifier string, createdBy int) bool{
 	var user User
 	user.Name = phone
-	user.Identifier = "wx_2kd8Dflco"
+	user.Identifier = identifier
 	user.Phone = phone
-	//DB.Table("wechat_user").Create(&user)
+	DB.Table("wechat_user").Create(&user)
 	return true
 }
 

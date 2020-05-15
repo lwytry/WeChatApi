@@ -1,9 +1,11 @@
 package controller
 
 import (
+	"encoding/base64"
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
+	"github.com/satori/go.uuid"
 	"math/rand"
 	"net/http"
 	"strconv"
@@ -29,9 +31,21 @@ func GetUserlist(c *gin.Context) {
 func Register(c *gin.Context) {
 	phoneNum := c.PostForm("phone")
 	codeString := c.PostForm("code");
+	// 用于验证码校验
 	code, _ := strconv.Atoi(codeString)
-	fmt.Print(code)
-	ret := model.AddUser(phoneNum, int(time.Now().Unix()))
+	coder, _ := redis.NewCache.GetInt(phoneNum)
+	if (coder != code) {
+		c.JSON(http.StatusOK, gin.H{
+			"message": "验证码错误",
+			"errCode":1002,
+		})
+		return
+	}
+
+	uid := uuid.NewV1().String()
+	encodeString := base64.StdEncoding.EncodeToString([]byte(uid))
+	identifier := "wx_" + encodeString[:17]
+	ret := model.AddUser(phoneNum, identifier, int(time.Now().Unix()))
 	if (ret) {
 		c.JSON(http.StatusOK, gin.H{
 			"message": "",
@@ -57,6 +71,9 @@ func SendCaptcha(c *gin.Context) {
 		})
 		return
 	}
+	// 发送验证码
+
+
 	rnd := rand.New(rand.NewSource(time.Now().UnixNano()))
 	vcode := fmt.Sprintf("%06v", rnd.Int31n(1000000))
 	_, err := redis.NewCache.SetString(phoneNum, vcode)
@@ -108,10 +125,13 @@ func Login(c *gin.Context) {
 	}
 
 	token, _ := j.CreateToken(claims)
+	data := make(map[string] interface{})
+	data["token"] = token
+	data["userInfo"] = user
 	c.JSON(http.StatusOK, gin.H{
 		"message": "验证码错误",
 		"errCode":0,
-		"data": token,
+		"data": data,
 	})
 }
 func ParseToken(c *gin.Context) {
