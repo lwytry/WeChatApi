@@ -46,7 +46,6 @@ func (j *JWT) ParseToken(tokenString string) (*UserInfo, error) {
 		}
 		return j.SigningKey, nil
 	})
-
 	if err != nil {
 		return nil, err
 	}
@@ -59,21 +58,17 @@ func (j *JWT) ParseToken(tokenString string) (*UserInfo, error) {
 
 //更新token
 func (j *JWT) RefreshToken(tokenString string) (string, error) {
-	jwt.TimeFunc = func() time.Time {
-		return time.Unix(0, 0)
-	}
 
 	token, err := jwt.ParseWithClaims(tokenString, &UserInfo{}, func(token *jwt.Token) (interface{}, error) {
 		return j.SigningKey, nil
 	})
-
 	if err != nil {
 		return "", err
 	}
 
 	if claims, ok := token.Claims.(*UserInfo); ok && token.Valid {
 		jwt.TimeFunc = time.Now
-		claims.StandardClaims.ExpiresAt = time.Now().Add(1 * time.Hour).Unix()
+		claims.StandardClaims.ExpiresAt = time.Now().Add(time.Hour * 24 * 30).Unix()
 		return j.CreateToken(*claims)
 	}
 
