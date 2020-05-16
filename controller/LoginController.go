@@ -129,14 +129,26 @@ func Login(c *gin.Context) {
 	data["token"] = token
 	data["userInfo"] = user
 	c.JSON(http.StatusOK, gin.H{
-		"message": "验证码错误",
+		"message": "",
 		"errCode":0,
 		"data": data,
 	})
 }
-func ParseToken(c *gin.Context) {
+func RefreshToken(c *gin.Context) {
 	j := &utils.JWT{[]byte(utils.SignKey)}
-	userinfo, err := j.ParseToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxMCIsImlkZW50aWZpZXIiOiJ3eF8ya2Q4RGZsY28iLCJuYW1lIjoibHd5dHJ5IiwicGhvbmUiOiIxMzA2OTQ4MTI1MSIsImV4cCI6MTU4NzkwNjU1NCwiaXNzIjoibWFuIiwibmJmIjoxNTg3OTAxOTU0fQ.nhSaQfA_akofqHQYAfgWKgeBBszvJKdyiCMCTbkmT7Q")
-	fmt.Println(userinfo, err)
+	token := c.GetHeader("token")
+	newToken, err := j.RefreshToken(token)
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"message": "生成token失败",
+			"errCode":1001,
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"message": "",
+		"errCode": 0,
+		"data": newToken,
+	})
 }
 
