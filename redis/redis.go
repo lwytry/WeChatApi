@@ -166,3 +166,15 @@ func (p *RedisConnPool) Incr(key string) (int, error) {
 	defer conn.Close()
 	return redis.Int(conn.Do("INCR", key))
 }
+
+func (p *RedisConnPool) Lpush(key string, value interface{}) (int, error) {
+	conn := p.redisPool.Get()
+	defer conn.Close()
+	return redis.Int(conn.Do("LPUSH", key, value))
+}
+
+func (p *RedisConnPool) Lrange(key string, start int, end int) ([]string, error) {
+	conn := p.redisPool.Get()
+	defer conn.Close()
+	return redis.Strings(conn.Do("LRANGE", key, start, end))
+}
