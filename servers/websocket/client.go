@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/gorilla/websocket"
 	"runtime/debug"
+	"wechat/redis"
 )
 
 const (
@@ -102,13 +103,14 @@ func (c *Client) write() {
 	}
 }
 
-// 读取客户端数据
-func (c *Client) SendMsg(msg []byte) {
+// 发送数据
+func (c *Client) SendMsg(message string, userId string) {
 
+	// 如果客户端不存在 那么存入redis
 	if c == nil {
-
-		return
+		redis.NewCache.Lpush("messageUserId_" + userId, message)
 	}
+
 
 	defer func() {
 		if r := recover(); r != nil {
@@ -116,7 +118,7 @@ func (c *Client) SendMsg(msg []byte) {
 		}
 	}()
 
-	c.Send <- msg
+	c.Send <- []byte(message)
 }
 
 // 读取客户端数据
