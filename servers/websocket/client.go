@@ -33,12 +33,12 @@ type Client struct {
 }
 
 // 初始化
-func NewClient(addr string, socket *websocket.Conn, userId string, firstTime uint64) (client *Client) {
+func NewClient(addr string, socket *websocket.Conn, topicId string, firstTime uint64) (client *Client) {
 	client = &Client{
 		Addr:          addr,
 		Socket:        socket,
 		Send:          make(chan []byte, 100),
-		UserId:		   userId,
+		UserId:		   topicId,
 		FirstTime:     firstTime,
 		HeartbeatTime: firstTime,
 	}
@@ -109,8 +109,8 @@ func (c *Client) SendMsg(message string, userId string) {
 	// 如果客户端不存在 那么存入redis
 	if c == nil {
 		redis.NewCache.Lpush("messageUserId_" + userId, message)
+		return
 	}
-
 
 	defer func() {
 		if r := recover(); r != nil {

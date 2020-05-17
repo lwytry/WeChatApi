@@ -40,12 +40,12 @@ func wsPage(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	fmt.Println("webSocket 建立连接:", conn.RemoteAddr().String())
 	// 连接处可以做认证
-	userId := req.URL.Query().Get("userId");
+	topicId := req.URL.Query().Get("topicId");
 
+	fmt.Println("webSocket 建立连接:", conn.RemoteAddr().String(), topicId)
 	currentTime := uint64(time.Now().Unix())
-	client := NewClient(conn.RemoteAddr().String(), conn, userId, currentTime)
+	client := NewClient(conn.RemoteAddr().String(), conn, topicId, currentTime)
 
 	go client.read()
 	go client.write()
