@@ -11,11 +11,11 @@ import (
 
 
 func SendMessage(c *gin.Context) {
-	userId := c.Query("userId")
+	dstId := c.Query("dstId")
 	data, _ := ioutil.ReadAll(c.Request.Body)
 
-	client :=  websocket.ClientManagerins.GetUserClient(userId)
-	client.SendMsg(string(data), userId)
+	client :=  websocket.ClientManagerins.GetUserClient(dstId)
+	client.SendMsg(string(data), dstId)
 	c.JSON(http.StatusOK, gin.H{
 		"message": "",
 		"errCode": 0,
