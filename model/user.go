@@ -54,25 +54,7 @@ func GetUserByPhone(phone string) (user User) {
 	return
 }
 
-
-func EditTag(id int, data interface{}) bool {
-	DB.Model(&User{}).Where("id = ?", id).Updates(data)
-
-	return true
-}
-
-func DeleteTag(id int) bool {
-	DB.Where("id = ?", id).Delete(&User{})
-
-	return true
-}
-
 func (tag *User) BeforeCreate(scope *gorm.Scope) error {
 	scope.SetColumn("CreatedOn", time.Now().Unix())
-	return nil
-}
-
-func (tag *User) BeforeUpdate(scope *gorm.Scope) error {
-	scope.SetColumn("MofifiedOn", time.Now().Unix())
 	return nil
 }

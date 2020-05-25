@@ -30,11 +30,17 @@ func GetUserlist(c *gin.Context) {
 
 func Register(c *gin.Context) {
 	phoneNum := c.PostForm("phone")
-	codeString := c.PostForm("code");
+	code := c.PostForm("code");
+	if (phoneNum == "" || code == "") {
+		c.JSON(http.StatusOK, gin.H{
+			"message": "参数错误",
+			"errCode":1001,
+		})
+		return
+	}
 	// 用于验证码校验
-	code, _ := strconv.Atoi(codeString)
-	coder, _ := redis.NewCache.GetInt(phoneNum)
-	if (coder != code) {
+	redisCoder, _ := redis.NewCache.GetBytes(phoneNum)
+	if (code != string(redisCoder)) {
 		c.JSON(http.StatusOK, gin.H{
 			"message": "验证码错误",
 			"errCode":1002,
