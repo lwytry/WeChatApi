@@ -27,6 +27,13 @@ func InitRouter() *gin.Engine {
 		apiv1.GET("/refreshToken", controller.RefreshToken)
 	}
 
+	contact := apiv1.Group("/contact")
+	contact.Use(servers.JWT())
+	{
+		// 获取用户联系人
+		contact.GET("/getList", controller.GetContactList)
+	}
+
 	chat := apiv1.Group("/chat")
 	chat.Use(servers.JWT())
 	{
