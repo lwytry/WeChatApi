@@ -4,8 +4,10 @@ import (
 	"github.com/gin-gonic/gin"
 	"io/ioutil"
 	"net/http"
+	"time"
 	"wechat/redis"
-	"wechat/servers/websocket"
+	"wechat/service/rtc"
+	"wechat/service/websocket"
 )
 
 
@@ -32,14 +34,35 @@ func PullMessage(c *gin.Context) {
 	})
 }
 
-func Chat(c *gin.Context) {
-	message := "你好客户端"
-	client := websocket.ClientManagerins.GetUserClient("1001")
-	if (client != nil) {
-		client.Send <- []byte(message)
+func GetRTCToken(c *gin.Context) {
+	userId := c.Query("userId")
+	dstId := c.Query("dstId")
+	if (userId == "" || dstId == "") {
+		c.JSON(http.StatusOK, gin.H{
+			"message": "参数错误",
+			"errCode": 1001,
+		})
+		return
+	}
+	roomName := userId + dstId
+	expireTime := time.Now().Unix() + 3600 * 2
+	manager := rtc.NewManager()
+	access := rtc.RoomAccess{
+		RoomName: roomName,
+		UserID: userId,
+		ExpireAt: expireTime,
+		Permission: "user",
+	}
+	token, err := manager.GetRoomToken(access)
+	if (err != nil) {
+		c.JSON(http.StatusOK, gin.H{
+			"message": "生成失败",
+			"errCode": 1001,
+		})
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"message": "",
 		"errCode": 0,
+		"data": token,
 	})
 }
