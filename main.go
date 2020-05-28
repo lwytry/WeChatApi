@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	_ "wechat/model"
-	"wechat/servers/websocket"
+	"wechat/service/websocket"
 	"wechat/sysini"
 	"wechat/utils"
 )
