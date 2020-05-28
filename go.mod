@@ -13,6 +13,7 @@ require (
 	github.com/jinzhu/gorm v1.9.12
 	github.com/json-iterator/go v1.1.9 // indirect
 	github.com/mattn/go-isatty v0.0.12 // indirect
+	github.com/qiniu/api.v7/v7 v7.5.0
 	github.com/satori/go.uuid v1.2.0
 	github.com/ugorji/go v1.1.7 // indirect
 	gopkg.in/go-playground/validator.v8 v8.18.2 // indirect
