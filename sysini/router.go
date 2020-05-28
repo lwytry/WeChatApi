@@ -3,7 +3,7 @@ package sysini
 import (
 	"github.com/gin-gonic/gin"
 	"wechat/controller"
-	"wechat/servers"
+	"wechat/service"
 	"wechat/utils"
 )
 
@@ -28,15 +28,17 @@ func InitRouter() *gin.Engine {
 	}
 
 	contact := apiv1.Group("/contact")
-	contact.Use(servers.JWT())
+	contact.Use(service.JWT())
 	{
 		// 获取用户联系人
 		contact.GET("/getList", controller.GetContactList)
 	}
 
 	chat := apiv1.Group("/chat")
-	chat.Use(servers.JWT())
+	chat.Use(service.JWT())
 	{
+		// 获取聊天直播间token 用来发起视频通信
+		chat.GET("getRTCToken", controller.GetRTCToken);
 		// 发送消息
 		chat.POST("/message", controller.SendMessage)
 		// 拉取消息
