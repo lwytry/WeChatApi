@@ -87,6 +87,7 @@ type AppUpdateInfo struct {
 	MergePublishRtmp *MergePublishRtmpInfo `json:"mergePublishRtmp,omitempty"`
 }
 
+// 请大家自行申请 七牛的音视频通信
 const accessKey = "VOEegOWjtgPZfCf3nejNwf7KvkV52oxcC9oNshF8"
 const secretKey = "6A1v1PgUJScjzkNkULoMVO-VGgawjJd5In7ASiPk"
 const appId = "eyjy5v92s"
