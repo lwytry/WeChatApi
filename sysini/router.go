@@ -38,12 +38,13 @@ func InitRouter() *gin.Engine {
 	chat.Use(service.JWT())
 	{
 		// 获取聊天直播间token 用来发起视频通信
-		chat.GET("getRTCToken", controller.GetRTCToken);
+		chat.GET("/getRTCToken", controller.GetRTCToken);
 		// 发送消息
 		chat.POST("/message", controller.SendMessage)
 		// 拉取消息
 		chat.GET("/message", controller.PullMessage)
 	}
+	apiv1.GET("/getOSStoken", controller.GetSignUrl)
 
 	return r
 }
