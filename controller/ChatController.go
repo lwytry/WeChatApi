@@ -36,19 +36,18 @@ func PullMessage(c *gin.Context) {
 
 func GetRTCToken(c *gin.Context) {
 	userId := c.Query("userId")
-	dstId := c.Query("dstId")
-	if (userId == "" || dstId == "") {
+	roomId := c.Query("roomId")
+	if (userId == "" || roomId == "") {
 		c.JSON(http.StatusOK, gin.H{
 			"message": "参数错误",
 			"errCode": 1001,
 		})
 		return
 	}
-	roomName := userId + dstId
 	expireTime := time.Now().Unix() + 3600 * 2
 	manager := rtc.NewManager()
 	access := rtc.RoomAccess{
-		RoomName: roomName,
+		RoomName: roomId,
 		UserID: userId,
 		ExpireAt: expireTime,
 		Permission: "user",
