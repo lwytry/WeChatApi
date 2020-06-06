@@ -5,17 +5,18 @@ import (
 	"net/http"
 	_ "wechat/model"
 	"wechat/service/websocket"
-	"wechat/sysini"
+	"wechat/router"
 	"wechat/utils"
 )
 
 func main() {
 
 	go websocket.StartWebSocket()
-	router := sysini.InitRouter()
+	httpRouter := router.InitRouter()
+	router.WebsocketInit()
 	s := &http.Server{
 		Addr:           fmt.Sprintf(":%d", utils.HTTPPort),
-		Handler:        router,
+		Handler:        httpRouter,
 		ReadTimeout:    utils.ReadTimeout,
 		WriteTimeout:   utils.WriteTimeout,
 		MaxHeaderBytes: 1 << 20,
