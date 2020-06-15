@@ -82,6 +82,8 @@ func (manager *ClientManager) GetUserClient(userId string) (client *Client) {
 	userKey := GetUserKey(userId)
 	if value, ok := manager.Clients[userKey]; ok {
 		client = value
+	} else {
+		client = &Client{UserId:userId}
 	}
 
 	return
