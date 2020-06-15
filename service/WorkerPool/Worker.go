@@ -15,7 +15,6 @@ func (w Worker) Run(wp chan chan Job) {
 			select {
 			case job := <-w.JobQueue:
 				job.Do()
-				continue
 			}
 		}
 	}()

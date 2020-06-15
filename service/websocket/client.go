@@ -106,6 +106,7 @@ func (c *Client) write() {
 
 func (c *Client) Do () {
 	// 如果客户端不存在 那么存入redis
+	fmt.Println(c.UserId)
 	if c.Socket == nil {
 		redis.NewCache.Lpush("messageUserId_" + c.UserId, c.Data)
 		return
