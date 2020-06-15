@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	_ "wechat/model"
+	_ "wechat/service/WorkerPool"
 	"wechat/service/websocket"
 	"wechat/router"
 	"wechat/utils"
