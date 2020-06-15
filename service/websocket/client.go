@@ -30,6 +30,7 @@ type Client struct {
 	FirstTime     uint64          // 首次连接事件
 	HeartbeatTime uint64          // 用户上次心跳时间
 	LoginTime     uint64          // 登录时间 登录以后才有
+	Data 		  []byte 		  // 数据
 }
 
 // 初始化
@@ -103,9 +104,25 @@ func (c *Client) write() {
 	}
 }
 
+func (c *Client) Do () {
+	// 如果客户端不存在 那么存入redis
+	if c.Socket == nil {
+		redis.NewCache.Lpush("messageUserId_" + c.UserId, c.Data)
+		return
+	}
+
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Println("SendMsg stop:", r, string(debug.Stack()))
+		}
+	}()
+
+	c.Send <- c.Data
+}
+
 // 发送数据
 func (c *Client) SendMsg(message string, userId string) {
-
+	fmt.Println(message)
 	// 如果客户端不存在 那么存入redis
 	if c == nil {
 		redis.NewCache.Lpush("messageUserId_" + userId, message)
